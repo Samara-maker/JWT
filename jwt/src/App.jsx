@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 export default function App() {
-  const [email, setEmail] = useState("teste@teste.com");
+  const [email, setEmail] = useState("user@.com");
   const [password, setPassword] = useState("123456");
   const [token, setToken] = useState(sessionStorage.getItem("token") || "");
   const [privateMsg, setPrivateMsg] = useState("");
