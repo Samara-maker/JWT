@@ -7,20 +7,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Em produção coloque isso em variável de ambiente
+// Em produção use variável de ambiente
 const SECRET = "secret123";
 
-// Usuário fixo só para teste
+// Usuário de teste
 const user = {
-  email: "teste@teste.com",
+  username: "user",
   passwordHash: bcrypt.hashSync("123456", 8)
 };
 
-// ---------------- LOGIN ----------------
+// ---------- LOGIN ----------
 app.post("/login", (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (email !== user.email) {
+  if (username !== user.username) {
     return res.status(401).json({ error: "Credenciais inválidas" });
   }
 
@@ -29,12 +29,12 @@ app.post("/login", (req, res) => {
     return res.status(401).json({ error: "Credenciais inválidas" });
   }
 
-  const token = jwt.sign({ email }, SECRET, { expiresIn: "1h" });
+  const token = jwt.sign({ username }, SECRET, { expiresIn: "1h" });
 
   return res.json({ token });
 });
 
-// ---------- Middleware para validar o token ----------
+// ---------- MIDDLEWARE ----------
 function auth(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -49,15 +49,15 @@ function auth(req, res, next) {
   try {
     jwt.verify(token, SECRET);
     return next();
-  } catch (e) {
+  } catch (err) {
     return res.status(403).json({ error: "Token inválido ou expirado" });
   }
 }
 
-// ---------------- ROTA PRIVADA ----------------
+// ---------- ROTA PRIVADA ----------
 app.get("/private", auth, (req, res) => {
   return res.json({ message: "Acesso autorizado! 🎉" });
 });
 
-// ---------------- INICIAR SERVIDOR ----------------
+// ---------- INICIAR ----------
 app.listen(3001, () => console.log("Server on http://localhost:3001"));
