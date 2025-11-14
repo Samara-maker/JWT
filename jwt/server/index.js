@@ -12,8 +12,12 @@ const SECRET = "secret123";
 
 // Usuário de teste
 const user = {
+
     username: "user",
-    passwordHash: bcrypt.hashSync("123456", 8)
+    passwordHash: bcrypt.hashSync("123456", 8),
+  email: "user@user.com",
+  passwordHash: bcrypt.hashSync("123456", 8)
+
 };
 
 // ---------- LOGIN ----------

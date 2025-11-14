@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 export default function App() {
-  const [email, setEmail] = useState("teste@teste.com");
+  const [username, setUsername] = useState("user");
   const [password, setPassword] = useState("123456");
   const [token, setToken] = useState(sessionStorage.getItem("token") || "");
   const [privateMsg, setPrivateMsg] = useState("");
@@ -18,7 +18,7 @@ export default function App() {
       const res = await fetch("http://localhost:3001/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await res.json();
@@ -28,18 +28,21 @@ export default function App() {
 
       sessionStorage.setItem("token", data.token);
       setToken(data.token);
-    } catch (err) {
+    } catch {
       setLoading(false);
       setError("Erro ao conectar ao servidor");
     }
   }
 
   async function acessarPrivate() {
-    setLoading(true);
     setError("");
+    setLoading(true);
+
     try {
       const res = await fetch("http://localhost:3001/private", {
-        headers: { Authorization: "Bearer " + token },
+        headers: {
+          Authorization: "Bearer " + token,
+        },
       });
 
       const data = await res.json();
@@ -48,7 +51,7 @@ export default function App() {
       if (!res.ok) return setError(data.error);
 
       setPrivateMsg(data.message);
-    } catch (err) {
+    } catch {
       setLoading(false);
       setError("Erro ao conectar ao servidor");
     }
@@ -62,10 +65,10 @@ export default function App() {
         {!token ? (
           <form onSubmit={login}>
             <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Usuário"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
 
             <input
@@ -90,7 +93,6 @@ export default function App() {
             </button>
 
             {privateMsg && <p className="msg">{privateMsg}</p>}
-
             {error && <p className="error">{error}</p>}
           </div>
         )}
