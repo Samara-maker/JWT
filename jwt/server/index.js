@@ -12,7 +12,7 @@ const SECRET = "secret123";
 
 // Usuário fixo só para teste
 const user = {
-  email: "teste@teste.com",
+  email: "user@user.com",
   passwordHash: bcrypt.hashSync("123456", 8)
 };
 
